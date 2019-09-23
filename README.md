@@ -1,31 +1,84 @@
 # web-components-react-bindings
 
-> Use web-components in react! Bind object, arrays and functions in an easier and natural way. Bindings works great with web-components built in Stencil.js
+## What?
 
-[![NPM](https://img.shields.io/npm/v/web-components-react-bindings.svg)](https://www.npmjs.com/package/web-components-react-bindings) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+`web-components-react-bindings` allows binding non-string props (like numbers, objects, arrays or functions) to `web-components` using `React`
 
-## Install
+## Why?
 
-```bash
-npm install --save web-components-react-bindings
-```
+`React` doesn't play well with `web-components` natively, so a bindings layer is necessary to correctly pass-down properties and bind events.
 
-## Usage
+You can check more info about this on this URL: https://custom-elements-everywhere.com/
 
-```tsx
-import * as React from 'react'
+## How?
 
-import MyComponent from 'web-components-react-bindings'
+`web-components-react-bindings` uses `Proxy` and `react-hooks` under the hood:
+- `react-hooks`: to set non-string properties and to bind to events we need to get a reference to the component's instance; for this purpose we are using `useRef` and creating a new hook called `useBindings` that will receive the props and pass down to `web-components` accordingly.
+- `Proxy`: whenever you call the proxy it will return a function that is used as a `HOC` to connect your `React` application with native `web-components`, using `useBindings` described above.
 
-class Example extends React.Component {
-  render () {
-    return (
-      <MyComponent />
-    )
+
+## Simple example
+
+Imagine ther is a `custom-button` web-component registered, and it accepts a `label` property and emmits an `buttonClick` event; you will instantiate the component into your `React` app using the following snippet:
+
+```js
+import WC from 'web-components-react-bindings'
+
+const App = () => {
+
+  function handleClick() {
+    console.log('clicked!')
   }
+
+  return (
+    <p>This is my button: </p>
+    <WC.CustomButton label={'My button'} onButtonClick={handleClick} />
+  )
 }
+
+export default App
 ```
+
+`WC` in the example above is the proxy. When you are accesing one of it's properties like `WC.CustomButton` it is returning a constructor function that will instantiate your `<custom-button>` web-component and implement `useBindings()` with the props you are passing to `<WC.CustomButton />`
+
+Note that for binding events the property name should begin with `on`; for the moment this convention is necessary for this to work properly.
+
+
+## Using Namespaces
+
+If all your `web-components` share the same prefix/namespace (e.g. `custom-`) then you can create a namespace to intantiate those component easily.
+
+First, create a file to create and export your namespace (e.g. `customWebComponents.js`): 
+
+```js
+import { createNamespace } from 'web-components-react-bindings'
+
+export default createNamespace('my-components')
+```
+
+Then you can use it in your `React` components:
+
+```js
+import WC from './customWebComponents'
+
+const App = () => {
+
+  function handleClick() {
+    console.log('clicked!')
+  }
+
+  return (
+    <p>This is my button: </p>
+    <WC.Button label={'My button'} onButtonClick={handleClick} />
+  )
+}
+
+export default App
+```
+
+Note that the example is very similar, but now you can avoid adding `Custom` for each of your components name.
+
 
 ## License
 
-MIT © [adrian-marcelo-gallardo](https://github.com/adrian-marcelo-gallardo)
+MIT

@@ -15,6 +15,9 @@ function useBindings(bindings: { [key: string]: any }) {
     }
 
     for (let prop in bindings) {
+      if (prop === 'children') {
+        continue
+      }
       if (prop.startsWith('on')) {
         const eventName = prop.replace(/on(\w)/i, (_, char) => char.toLowerCase())
 

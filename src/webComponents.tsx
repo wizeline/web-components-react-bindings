@@ -17,7 +17,12 @@ function createProxy(namespace?: string) {
       return (bindings: Bindings) => {
         const Component = getWebComponentName(componentName, namespace)
         const ref = useBindings(bindings)
-console.log(componentName, { bindings })
+        const { children } = bindings
+
+        if (children) {
+          // @ts-ignore
+          return <Component ref={ref}>{children}</Component>  
+        }
         // @ts-ignore
         return <Component ref={ref} />
       }

@@ -1,6 +1,6 @@
 {
   "name": "web-components-react-bindings",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Use web-components in react! Bind object, arrays and functions in an easier and natural way. Bindings works great with web-components built in Stencil.js",
   "author": "adrian-marcelo-gallardo",
   "license": "MIT",

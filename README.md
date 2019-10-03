@@ -6,14 +6,14 @@
 
 ## Why?
 
-`React` doesn't play well with `web-components` natively, so a bindings layer is necessary to correctly pass-down properties and bind events.
+`React` doesn't play well with `web-components` natively, so a bindings layer is necessary for correctly passing-down properties and binding to events.
 
 You can check more info about this on this URL: https://custom-elements-everywhere.com/
 
 ## How?
 
 `web-components-react-bindings` uses `Proxy` and `react-hooks` under the hood:
-- `react-hooks`: to set non-string properties and to bind to events we need to get a reference to the component's instance; for this purpose we are using `useRef` and creating a new hook called `useBindings` that will receive the props and pass down to `web-components` accordingly.
+- `react-hooks`: in order to set non-string properties and to bind to events we need to get a reference to the component's instance; for this purpose we are using `useRef` and creating a new hook called `useBindings` that will receive the props and pass down to `web-components` accordingly.
 - `Proxy`: whenever you call the proxy it will return a function that is used as a `HOC` to connect your `React` application with native `web-components`, using `useBindings` described above.
 
 
@@ -46,9 +46,9 @@ Note that for binding events the property name should begin with `on`; for the m
 
 ## Using Namespaces
 
-If all your `web-components` share the same prefix/namespace (e.g. `custom-`) then you can create a namespace to intantiate those component easily.
+If all your `web-components` share the same prefix/namespace (e.g. `my-components-`) then you can create a namespace to intantiate those component easily.
 
-First, create a file to create and export your namespace (e.g. `customWebComponents.js`): 
+First, create a file to create and export your namespace (e.g. `myComponents.js`): 
 
 ```js
 import { createNamespace } from 'web-components-react-bindings'
@@ -59,7 +59,7 @@ export default createNamespace('my-components')
 Then you can use it in your `React` components:
 
 ```js
-import WC from './customWebComponents'
+import MC from './myComponents'
 
 const App = () => {
 
@@ -69,14 +69,14 @@ const App = () => {
 
   return (
     <p>This is my button: </p>
-    <WC.Button label={'My button'} onButtonClick={handleClick} />
+    <MC.Button label={'My button'} onButtonClick={handleClick} />
   )
 }
 
 export default App
 ```
 
-Note that the example is very similar, but now you can avoid adding `Custom` for each of your components name.
+Note that the example is very similar, but now you can avoid adding `MyComponents` for each of your components name.
 
 
 ## License
